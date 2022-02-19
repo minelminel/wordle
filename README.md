@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# Wordle
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+`game-keyboard`
 
-## Available Scripts
+- WxH = 500x200px
+- composed of `data-key` with WxH = 43x58px
 
-In the project directory, you can run:
+Black: #000000
+Yellow: #B59F3B
+Gray: #3A3A3C
+Green: #538D4E
+Slate: #818384
 
-### `npm start`
+Tile
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- WxH = 62x62px
+- Font Size = 32px
+- Font Weight = Bold
+- 5 rows x 6 cols
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Components:
 
-### `npm test`
+- Keyboard
+- KeyboardKey
+- Tile
+- TileGrid
+- NavBar
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Events:
 
-### `npm run build`
+- KeyEnter (wire as if button clicked)
+- KeyPress (wire as if typing)
+- Backspace (subset of KeyEnter, KeyPress)
+- Enter (subset of KeyEnter, KeyPress)
+- Evaluate Guess & Show Hints
+- Game End Condition Check
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Handlers:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- when a key is pressed, we conditionally add it to an array of current guess letters
+- when the enter key is pressed, try to play, handle invalid word case, clear buffer if successful
+- append the guess to the wordle game turns property, update tiles & keyboard hints
