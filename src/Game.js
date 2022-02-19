@@ -12,23 +12,22 @@ console.log(`Game.js`);
 const [answers, _] = Words;
 const guesses = Words.flat();
 
-console.log(answers.length, guesses.length);
-
 export class Wordle {
   /**
    *
    * @param {*} seed
    */
-  constructor(seed = 0) {
+  constructor(seed = null) {
     // index of the answer array determines the target word
-    this.seed = seed;
     this.answers = answers;
     this.guesses = guesses;
+    this.seed =
+      seed === null ? this.constructor.randomInteger(0, answers.length) : seed;
     this.turns = [];
     this.alphabet = {};
     this.target = null;
     this.reset();
-    console.log(this.alphabet);
+    console.log(`Seed: ${this.seed}`);
   }
 
   /**
@@ -44,17 +43,26 @@ export class Wordle {
     this.target = this.answers[this.seed];
   }
 
+  static randomInteger(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+  }
+
   /**
    *
    * @param {string} guess
    * @returns
    */
   evaluateGuess(guess) {
+    console.log(guess);
     if (guess.length !== 5) {
       throw "guess length != 5";
+    } else if (this.guesses.indexOf(guess.join("")) === -1) {
+      throw "invalid guess";
     }
-    console.log(`Target: ${this.target}`);
-    console.log(`Guess: ${guess}`);
+    console.debug(`Target: ${this.target}`);
+    console.debug(`Guess: ${guess.join("")}`);
     this.turns.push(guess);
     const target = this.target.split("");
     const hints = [];
@@ -78,13 +86,9 @@ export class Wordle {
       }
     }
     // update keyboard alphabet as separate step
-    for (let i in hints) {
-      console.log(
-        `Current alphabet value: ${guess[i]} ${this.alphabet[guess[i]]}`
-      );
-      console.log(`Latest alphabet value: ${guess[i]} ${hints[i]}`);
+    hints.forEach((_, i) => {
       this.alphabet[guess[i]] = Math.max(hints[i], this.alphabet[guess[i]]);
-    }
+    });
     return hints;
   }
 }

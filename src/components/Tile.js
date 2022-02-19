@@ -27,6 +27,7 @@ export const Tile = ({ letter = "", hint = -1 }) => {
       : Colors.BLACK;
   const borderColor =
     hint === 2 ? Colors.GREEN : hint === 1 ? Colors.YELLOW : Colors.GRAY;
+
   return (
     <div
       style={{

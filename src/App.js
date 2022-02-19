@@ -5,88 +5,48 @@ import { Container, Row, Col } from "react-bootstrap";
 
 import { Keyboard } from "./components/Keyboard";
 import { Tile } from "./components/Tile";
+import { TileBoard } from "./components/TileBoard";
 import { Wordle } from "./Game";
 
-const wordle = new Wordle(246);
+const wordle = new Wordle();
 window.wordle = wordle;
-console.info(wordle.evaluateGuess("earth"));
-console.info(wordle.evaluateGuess("solid"));
+// console.info(wordle.evaluateGuess("earth"));
+// console.info(wordle.evaluateGuess("solid"));
 // console.info(wordle.evaluateGuess("dodge"));
 
-const gamestate = [
-  [
-    ["e", 1],
-    ["a", 0],
-    ["r", 0],
-    ["t", 0],
-    ["h", 0],
-  ],
-  [
-    ["s", 0],
-    ["o", 2],
-    ["l", 0],
-    ["i", 0],
-    ["d", 1],
-  ],
-  // [
-  //   ["d", 2],
-  //   ["o", 2],
-  //   ["d", 2],
-  //   ["g", 2],
-  //   ["e", 2],
-  // ],
-  [
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-  ],
-  [
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-  ],
-  [
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-  ],
-  [
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-    ["", -1],
-  ],
-];
-
 const App = () => {
-  const [guess, setGuess] = React.useState([]);
+  const [pastGuesses, setPastGuesses] = React.useState([]);
+  const [pastHints, setPastHints] = React.useState([]);
+  const [input, setInput] = React.useState([]);
 
   const handleInput = (event) => {
     if (event === "del") {
-      setGuess(guess.slice(0, -1));
+      setInput(input.slice(0, -1));
     } else if (event === "enter") {
-      console.log(guess.length);
-      if (guess.length === 5) {
-        // submit to wordle, get mask
-        console.log(guess);
-        const hint = wordle.evaluateGuess(guess);
-        console.log(hint);
+      if (input.length === 5) {
+        let hint;
+        try {
+          hint = wordle.evaluateGuess(input);
+        } catch (error) {
+          alert("Not A Valid Word");
+          return;
+        }
+        // check if we won: all 2's sum to 10
+        if (hint.reduce((partialSum, a) => partialSum + a, 0) === 10) {
+          alert(`You Win! The word was ${input.join("").toUpperCase()}`);
+          // allow the user to press enter to reset
+        }
+        // TODO: render the answer before telling the user they won
+        setPastHints([...pastHints, hint]);
+        setPastGuesses([...pastGuesses, input]);
+        setInput([]);
       }
-    } else if (guess.length < 5) {
-      setGuess([...guess, event]);
+    } else if (input.length < 5) {
+      setInput([...input, event]);
     } else {
       // pass
     }
   };
-
-  console.log(`Current Buffer: ${guess}`);
 
   return (
     <div className="App">
@@ -95,15 +55,15 @@ const App = () => {
           <h1>Wordle</h1>
           <hr />
         </nav>
-        <div style={{ padding: "20px" }}>
-          {gamestate.map((row) => (
-            <Row key={uuidv4()} className="mb-2">
-              {row.map((turn) => (
-                <Tile key={uuidv4()} letter={turn[0]} hint={turn[1]} />
-              ))}
-            </Row>
-          ))}
-        </div>
+        <Row>
+          <Col>
+            <TileBoard
+              pastGuesses={pastGuesses}
+              pastHints={pastHints}
+              input={input}
+            />
+          </Col>
+        </Row>
         <Row>
           <Keyboard hints={wordle.alphabet} onInput={handleInput} />
         </Row>
