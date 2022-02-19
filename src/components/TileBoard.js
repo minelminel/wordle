@@ -45,10 +45,14 @@ export const TileBoard = ({ pastGuesses = [], pastHints = [], input = [] }) => {
 
   // update the current row to display inputs
   const currentRow = pastGuesses.length;
-  letterLayer[currentRow] = [...input, ...letterLayer[currentRow]].slice(
-    0,
-    NUM_COLS
-  );
+  if (currentRow === 6) {
+    console.warn("Game Over");
+  } else {
+    letterLayer[currentRow] = [...input, ...letterLayer[currentRow]].slice(
+      0,
+      NUM_COLS
+    );
+  }
 
   // console.log(JSON.stringify(letterLayer, null, 2));
 

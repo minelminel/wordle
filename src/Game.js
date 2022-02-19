@@ -89,7 +89,8 @@ export class Wordle {
     hints.forEach((_, i) => {
       this.alphabet[guess[i]] = Math.max(hints[i], this.alphabet[guess[i]]);
     });
-    return hints;
+    const win = guess.join("") === this.target;
+    return [hints, win];
   }
 }
 

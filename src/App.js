@@ -8,38 +8,55 @@ import { Tile } from "./components/Tile";
 import { TileBoard } from "./components/TileBoard";
 import { Wordle } from "./Game";
 
-const wordle = new Wordle();
+const wordle = new Wordle(0);
 window.wordle = wordle;
-// console.info(wordle.evaluateGuess("earth"));
-// console.info(wordle.evaluateGuess("solid"));
-// console.info(wordle.evaluateGuess("dodge"));
+
+// DEV
+const initialInput = "".split("");
+const initialGuesses = [].map((ele) => ele.split(""));
+const initialHints = initialGuesses.map((ele) => {
+  const [hint, _] = wordle.evaluateGuess(ele);
+  return hint;
+});
+//
 
 const App = () => {
-  const [pastGuesses, setPastGuesses] = React.useState([]);
-  const [pastHints, setPastHints] = React.useState([]);
-  const [input, setInput] = React.useState([]);
+  const [pastGuesses, setPastGuesses] = React.useState(initialGuesses);
+  const [pastHints, setPastHints] = React.useState(initialHints);
+  const [input, setInput] = React.useState(initialInput);
+
+  const reset = () => {
+    setPastGuesses(initialGuesses);
+    setPastHints(initialHints);
+    setInput(initialInput);
+    wordle.reset();
+  };
 
   const handleInput = (event) => {
     if (event === "del") {
       setInput(input.slice(0, -1));
     } else if (event === "enter") {
       if (input.length === 5) {
-        let hint;
+        let hint, win;
         try {
-          hint = wordle.evaluateGuess(input);
+          [hint, win] = wordle.evaluateGuess(input);
         } catch (error) {
           alert("Not A Valid Word");
           return;
         }
-        // check if we won: all 2's sum to 10
-        if (hint.reduce((partialSum, a) => partialSum + a, 0) === 10) {
-          alert(`You Win! The word was ${input.join("").toUpperCase()}`);
-          // allow the user to press enter to reset
+        // TODO: allow the user to press enter before resetting
+        if (win === true) {
+          alert(`You Win! The word was ${wordle.target.toUpperCase()}`);
+          reset();
+        } else if (pastGuesses.length === 5 && win === false) {
+          alert(`Whoops! The word was ${wordle.target.toUpperCase()}`);
+          reset();
+        } else {
+          // TODO: render the answer before telling the user they won
+          setPastHints([...pastHints, hint]);
+          setPastGuesses([...pastGuesses, input]);
+          setInput([]);
         }
-        // TODO: render the answer before telling the user they won
-        setPastHints([...pastHints, hint]);
-        setPastGuesses([...pastGuesses, input]);
-        setInput([]);
       }
     } else if (input.length < 5) {
       setInput([...input, event]);

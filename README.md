@@ -40,3 +40,9 @@ Handlers:
 - when a key is pressed, we conditionally add it to an array of current guess letters
 - when the enter key is pressed, try to play, handle invalid word case, clear buffer if successful
 - append the guess to the wordle game turns property, update tiles & keyboard hints
+
+Layout:
+
+- navbar
+- centered tileboard
+- stick-bottom keyboard
