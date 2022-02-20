@@ -1,91 +1,68 @@
 import React from "react";
-
 import { v4 as uuidv4 } from "uuid";
-import { Container, Row, Col } from "react-bootstrap";
 
-import { Keyboard } from "./components/Keyboard";
-import { Tile } from "./components/Tile";
-import { TileBoard } from "./components/TileBoard";
+import NavBar from "./NavBar";
+import KeyBoard from "./KeyBoard";
+import TileBoard from "./TileBoard";
 import { Wordle } from "./Game";
+import { Keys } from "./Const";
 
-const wordle = new Wordle(0);
+// TODO: do this in a useEffect with finish state dependency array
+const wordle = new Wordle();
 window.wordle = wordle;
 
-// DEV
-const initialInput = "".split("");
-const initialGuesses = [].map((ele) => ele.split(""));
-const initialHints = initialGuesses.map((ele) => {
-  const [hint, _] = wordle.evaluateGuess(ele);
-  return hint;
-});
-//
-
-const App = () => {
-  const [pastGuesses, setPastGuesses] = React.useState(initialGuesses);
-  const [pastHints, setPastHints] = React.useState(initialHints);
-  const [input, setInput] = React.useState(initialInput);
+export const App = (props) => {
+  const [pastGuesses, setPastGuesses] = React.useState([]);
+  const [pastHints, setPastHints] = React.useState([]);
+  const [input, setInput] = React.useState([]);
+  const [gameEnded, setGameEnded] = React.useState(false);
 
   const reset = () => {
-    setPastGuesses(initialGuesses);
-    setPastHints(initialHints);
-    setInput(initialInput);
     wordle.reset();
+    setPastGuesses([]);
+    setPastHints([]);
+    setInput([]);
+    setGameEnded(false);
   };
 
-  const handleInput = (event) => {
-    if (event === "del") {
-      setInput(input.slice(0, -1));
-    } else if (event === "enter") {
-      if (input.length === 5) {
-        let hint, win;
-        try {
-          [hint, win] = wordle.evaluateGuess(input);
-        } catch (error) {
-          alert("Not A Valid Word");
-          return;
-        }
-        // TODO: allow the user to press enter before resetting
-        if (win === true) {
-          alert(`You Win! The word was ${wordle.target.toUpperCase()}`);
-          reset();
-        } else if (pastGuesses.length === 5 && win === false) {
-          alert(`Whoops! The word was ${wordle.target.toUpperCase()}`);
-          reset();
+  const handleInput = (e) => {
+    if (e === Keys.DELETE) {
+      setInput([...input.slice(0, -1)]);
+    } else if (e === Keys.ENTER) {
+      if (gameEnded) {
+        reset();
+        return;
+      } else if (!wordle.isValid(input)) {
+        alert(`Invalid Word: ${input.join("")}`);
+        return;
+      }
+      const [hint, ended] = wordle.evaluateGuess(input);
+      setGameEnded(ended);
+      if (ended) {
+        if (wordle.isAnswer(input)) {
+          alert(`You Win! The word was ${wordle.getAnswer().toUpperCase()}`);
         } else {
-          // TODO: render the answer before telling the user they won
-          setPastHints([...pastHints, hint]);
-          setPastGuesses([...pastGuesses, input]);
-          setInput([]);
+          alert(`You Lose! The word was ${wordle.getAnswer().toUpperCase()}`);
         }
       }
-    } else if (input.length < 5) {
-      setInput([...input, event]);
+      setPastGuesses([...pastGuesses, input]);
+      setPastHints([...pastHints, hint]);
+      setInput([]);
     } else {
-      // pass
+      setInput([...input, e]);
     }
   };
 
   return (
-    <div className="App">
-      <Container>
-        <nav className="p-3">
-          <h1>Wordle</h1>
-          <hr />
-        </nav>
-        <Row>
-          <Col>
-            <TileBoard
-              pastGuesses={pastGuesses}
-              pastHints={pastHints}
-              input={input}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Keyboard hints={wordle.alphabet} onInput={handleInput} />
-        </Row>
-      </Container>
-    </div>
+    <>
+      <NavBar seed={wordle.seed} />
+      <TileBoard
+        pastHints={pastHints}
+        pastGuesses={pastGuesses}
+        input={input}
+      />
+      <KeyBoard hints={wordle.alphabet} handler={handleInput} />
+    </>
   );
 };
 

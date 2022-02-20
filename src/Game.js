@@ -23,10 +23,11 @@ export class Wordle {
     this.guesses = guesses;
     this.seed =
       seed === null ? this.constructor.randomInteger(0, answers.length) : seed;
-    this.alphabet = {};
-    this.target = null;
+    // this.alphabet = {};
+    // this.target = null;
+    this.turns = 0;
     this.reset();
-    console.log(`Seed: ${this.seed}`);
+    console.debug(`Seed: ${this.seed}`);
   }
 
   /**
@@ -47,6 +48,18 @@ export class Wordle {
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
   }
 
+  isValid(guess) {
+    return this.guesses.indexOf(guess.join("")) !== -1;
+  }
+
+  isAnswer(guess) {
+    return this.target === guess.join("");
+  }
+
+  getAnswer() {
+    return this.target;
+  }
+
   /**
    *
    * @param {string} guess
@@ -57,12 +70,13 @@ export class Wordle {
     if (guess.length !== 5) {
       throw "guess length != 5";
     } else if (this.guesses.indexOf(guess.join("")) === -1) {
-      throw "invalid guess";
+      throw `invalid guess: ${guess.join("").toUpperCase()}`;
     }
     console.debug(`Target: ${this.target}`);
     console.debug(`Guess: ${guess.join("")}`);
     const target = this.target.split("");
     const hints = [];
+    this.turns += 1;
     for (let i in guess) {
       if (target.indexOf(guess[i]) === -1) {
         console.debug(`guess=${guess} i=${i} (${guess[i]}) : Gray`);
@@ -86,7 +100,7 @@ export class Wordle {
     hints.forEach((_, i) => {
       this.alphabet[guess[i]] = Math.max(hints[i], this.alphabet[guess[i]]);
     });
-    const win = guess.join("") === this.target;
+    const win = guess.join("") === this.target || this.turns === 6;
     return [hints, win];
   }
 }

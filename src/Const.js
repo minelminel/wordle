@@ -7,11 +7,15 @@ export const Colors = {
   WHITE: "#FFFFFF",
 };
 export const Flags = {
-  ANIMATION: true,
+  ANIMATION: false,
 };
 export const Hints = {
   BLACK: -1,
   GRAY: 0,
   YELLOW: 1,
   GREEN: 2,
+};
+export const Keys = {
+  ENTER: "enter",
+  DELETE: "del",
 };

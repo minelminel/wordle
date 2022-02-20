@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import styled, { css, keyframes } from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { Flags, Colors } from "./Const";
+import { Keys, Colors } from "./Const";
 
 // CSS math
 const COMPONENT_WIDTH = 459;
@@ -90,10 +90,7 @@ const Key = ({
   );
 };
 
-export const ScratchKeyBoard = ({
-  hints = { i: 1, r: 2, s: 2, h: 2, c: 0, g: 0, a: 0, e: 0 },
-  handler = defaultHandler,
-}) => {
+export const KeyBoard = ({ hints = {}, handler = defaultHandler }) => {
   return (
     <>
       <Container
@@ -229,7 +226,7 @@ export const ScratchKeyBoard = ({
           <FlexRow>
             <Key
               key={uuidv4()}
-              letter="enter"
+              letter={Keys.ENTER}
               special={true}
               handler={handler}
             />
@@ -275,7 +272,12 @@ export const ScratchKeyBoard = ({
               hint={hints["m"]}
               handler={handler}
             />
-            <Key key={uuidv4()} letter="del" special={true} handler={handler} />
+            <Key
+              key={uuidv4()}
+              letter={Keys.DELETE}
+              special={true}
+              handler={handler}
+            />
           </FlexRow>
         </FlexCol>
       </Container>
@@ -283,4 +285,4 @@ export const ScratchKeyBoard = ({
   );
 };
 
-export default ScratchKeyBoard;
+export default KeyBoard;

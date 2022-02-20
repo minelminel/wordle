@@ -9,11 +9,11 @@ const StyledNav = styled.header`
   border-bottom: ${`1px solid ${Colors.GRAY}`};
 `;
 
-export const NavBar = (props) => {
+export const NavBar = ({ seed }) => {
   return (
     <>
       <StyledNav>
-        <h1>Wordle</h1>
+        <h1>{`Wordle #${seed}`}</h1>
       </StyledNav>
     </>
   );
