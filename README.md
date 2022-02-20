@@ -11,6 +11,10 @@ Gray: #3A3A3C
 Green: #538D4E
 Slate: #818384
 
+TODO:
+
+- handle component styling in top-level App presentation
+
 Tile
 
 - WxH = 62x62px

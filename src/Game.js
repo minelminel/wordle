@@ -23,7 +23,6 @@ export class Wordle {
     this.guesses = guesses;
     this.seed =
       seed === null ? this.constructor.randomInteger(0, answers.length) : seed;
-    this.turns = [];
     this.alphabet = {};
     this.target = null;
     this.reset();
@@ -34,7 +33,6 @@ export class Wordle {
    * Initialize the game state by selecting a target word
    */
   reset() {
-    this.turns = [];
     this.alphabet = Object.fromEntries(
       Array.from(Array(26))
         .map((e, i) => i + "a".charCodeAt(0))
@@ -63,7 +61,6 @@ export class Wordle {
     }
     console.debug(`Target: ${this.target}`);
     console.debug(`Guess: ${guess.join("")}`);
-    this.turns.push(guess);
     const target = this.target.split("");
     const hints = [];
     for (let i in guess) {

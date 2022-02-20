@@ -4,4 +4,14 @@ export const Colors = {
   SLATE: "#818384",
   YELLOW: "#B59F3B",
   GREEN: "#538D4E",
+  WHITE: "#FFFFFF",
+};
+export const Flags = {
+  ANIMATION: true,
+};
+export const Hints = {
+  BLACK: -1,
+  GRAY: 0,
+  YELLOW: 1,
+  GREEN: 2,
 };
