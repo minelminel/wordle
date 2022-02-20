@@ -5,7 +5,7 @@ import { Colors } from "./Const";
 
 const StyledNav = styled.header`
   text-align: center;
-  padding: 10px 0px 5px 0px;
+  padding: 0px;
   border-bottom: ${`1px solid ${Colors.GRAY}`};
 `;
 
@@ -13,7 +13,7 @@ export const NavBar = ({ seed }) => {
   return (
     <>
       <StyledNav>
-        <h1>{`Wordle #${seed}`}</h1>
+        <small>{`Wordle #${seed}`}</small>
       </StyledNav>
     </>
   );

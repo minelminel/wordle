@@ -11,24 +11,29 @@ import { Flags, Colors } from "./Const";
  * https://codepen.io/kanishkkunal/pen/wgEBgX
  */
 
+// CSS math
+const TILE_SIZE = "3.4rem";
+const SIZE = 300;
+
 const animate = keyframes`
   0% {
-    transform: translate(0%, 0%)
-      perspective(10000px)
+    transform: translate(0%, 50%)
+      // perspective(1000px)
       rotateX(0deg)
       rotateY(0deg)
   }
   50% {
-    // text-transform: scale(1, -1);
-    transform: translation(0%, 0%)
-      scale(1, -1)
-  }
-  100% {
     transform: translate(0%, 0%)
-      perspective(10000px)
-      rotateX(.5turn)
+      // perspective(1000px)
+      rotateX(.25turn)
       rotateY(0deg)
   }
+  100% {
+    transform: translate(0%, -50%)
+      // perspective(1000px)
+      rotateX(.25turn)
+      rotateY(0deg)
+  } 
 `;
 
 const StyledTile = styled.div`
@@ -37,12 +42,11 @@ const StyledTile = styled.div`
   justify-content: center;
   place-self: center;
 
-  height: 4rem;
-  width: 4rem;
+  height: ${TILE_SIZE};
+  width: ${TILE_SIZE};
 
   font-size: 2em;
   font-weight: bold;
-  // line-height: 2rem;
   color: ${Colors.WHITE};
   text-transform: uppercase;
 
@@ -62,7 +66,6 @@ const StyledTile = styled.div`
       ? Colors.GRAY
       : Colors.BLACK};
 
-  // if we have access to an index we can multiple by the delay
   offset-rotate: reverse;
   ${(props) =>
     Flags.ANIMATION &&
@@ -73,21 +76,16 @@ const StyledTile = styled.div`
 `;
 
 const Tile = (props) => {
-  return (
-    <StyledTile className="flip-animate" dataHover="Flip" {...props}>
-      {props.letter}
-    </StyledTile>
-  );
+  props.animate && console.log(props);
+  return <StyledTile {...props}>{props.letter}</StyledTile>;
 };
 
-export const TileBoard = ({
-  pastGuesses = [["e", "a", "r", "t", "h"]],
-  pastHints = [[0, 1, 1, 0, 0]],
-  input = ["a"],
-}) => {
+export const TileBoard = ({ pastGuesses = [], pastHints = [], input = [] }) => {
   const [NUM_COLS, NUM_ROWS] = [5, 6]; // 30 tiles
   console.assert(pastGuesses.flat().length === pastHints.flat().length);
-
+  const offset = pastGuesses.length ? pastGuesses.length - 1 : null;
+  const animations =
+    offset === null ? [] : Array.from({ length: 5 }, (v, k) => k + 5 * offset);
   const letters = [
     ...pastGuesses.flat(),
     ...input,
@@ -105,10 +103,11 @@ export const TileBoard = ({
       <Container
         className="p-0 mt-3 mb-3"
         style={{
-          width: "350px",
-          height: "420px",
+          // 350x420
+          width: `${SIZE}px`,
+          height: `${SIZE * 1.2}px`,
           display: "grid",
-          gridGap: "7px",
+          gridGap: "1px",
           gridTemplateRows: "repeat(6, 1fr)",
           gridTemplateColumns: "repeat(5, 1fr)",
         }}
@@ -121,6 +120,7 @@ export const TileBoard = ({
               letter={letters[i]}
               hint={hints[i]}
               index={i}
+              animate={animations.indexOf(i) > -1}
             />
           ))}
       </Container>

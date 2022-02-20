@@ -14,7 +14,7 @@ window.wordle = wordle;
 export const App = (props) => {
   const [pastGuesses, setPastGuesses] = React.useState([]);
   const [pastHints, setPastHints] = React.useState([]);
-  const [input, setInput] = React.useState([]);
+  const [input, setInput] = React.useState(["e", "a", "r", "t", "h"]);
   const [gameEnded, setGameEnded] = React.useState(false);
 
   const reset = () => {
@@ -34,6 +34,10 @@ export const App = (props) => {
         return;
       } else if (!wordle.isValid(input)) {
         alert(`Invalid Word: ${input.join("")}`);
+        return;
+      }
+      if (input.length < 5) {
+        setInput([...input, e]);
         return;
       }
       const [hint, ended] = wordle.evaluateGuess(input);
