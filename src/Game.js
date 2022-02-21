@@ -66,7 +66,7 @@ export class Wordle {
    * @returns
    */
   evaluateGuess(guess) {
-    console.log(guess);
+    console.debug(guess);
     if (guess.length !== 5) {
       throw "guess length != 5";
     } else if (this.guesses.indexOf(guess.join("")) === -1) {

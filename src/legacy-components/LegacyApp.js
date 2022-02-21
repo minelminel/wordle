@@ -3,10 +3,10 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Container, Row, Col } from "react-bootstrap";
 
-import { Keyboard } from "./components/Keyboard";
-import { Tile } from "./components/Tile";
-import { TileBoard } from "./components/TileBoard";
-import { Wordle } from "./Game";
+import { Keyboard } from "./Keyboard";
+import { Tile } from "./Tile";
+import { TileBoard } from "./TileBoard";
+import { Wordle } from "../Game";
 
 const wordle = new Wordle(0);
 window.wordle = wordle;

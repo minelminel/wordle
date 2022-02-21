@@ -1,9 +1,10 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
-import NavBar from "./NavBar";
-import KeyBoard from "./KeyBoard";
-import TileBoard from "./TileBoard";
+import NavBar from "./components/NavBar";
+import KeyBoard from "./components/KeyBoard";
+import TileBoard from "./components/TileBoard";
 import { Wordle } from "./Game";
 import { Keys } from "./Const";
 
@@ -11,24 +12,31 @@ import { Keys } from "./Const";
 const wordle = new Wordle();
 window.wordle = wordle;
 
+const initialInput = "".split("");
+const initialGuesses = [].map((e) => e.split(""));
+const initialHints = initialGuesses.map((e) => wordle.evaluateGuess(e)[0]);
+
 export const App = (props) => {
-  const [pastGuesses, setPastGuesses] = React.useState([]);
-  const [pastHints, setPastHints] = React.useState([]);
-  const [input, setInput] = React.useState(["e", "a", "r", "t", "h"]);
+  const [pastGuesses, setPastGuesses] = React.useState(initialGuesses);
+  const [pastHints, setPastHints] = React.useState(initialHints);
+  const [input, setInput] = React.useState(initialInput);
   const [gameEnded, setGameEnded] = React.useState(false);
 
   const reset = () => {
     wordle.reset();
-    setPastGuesses([]);
-    setPastHints([]);
-    setInput([]);
+    setPastGuesses(initialGuesses);
+    setPastHints(initialHints);
+    setInput(initialInput);
     setGameEnded(false);
   };
 
   const handleInput = (e) => {
     if (e === Keys.DELETE) {
-      setInput([...input.slice(0, -1)]);
+      if (input.length) {
+        setInput([...input.slice(0, -1)]);
+      }
     } else if (e === Keys.ENTER) {
+      // bug?
       if (gameEnded) {
         reset();
         return;
@@ -43,10 +51,11 @@ export const App = (props) => {
       const [hint, ended] = wordle.evaluateGuess(input);
       setGameEnded(ended);
       if (ended) {
+        // TODO: do alert on timeout so we can render the answer first
         if (wordle.isAnswer(input)) {
-          alert(`You Win! The word was ${wordle.getAnswer().toUpperCase()}`);
+          alert(`You Win! 🥳 The word was ${wordle.getAnswer().toUpperCase()}`);
         } else {
-          alert(`You Lose! The word was ${wordle.getAnswer().toUpperCase()}`);
+          alert(`Uh oh! 😓 The word was ${wordle.getAnswer().toUpperCase()}`);
         }
       }
       setPastGuesses([...pastGuesses, input]);
@@ -59,13 +68,20 @@ export const App = (props) => {
 
   return (
     <>
-      <NavBar seed={wordle.seed} />
-      <TileBoard
-        pastHints={pastHints}
-        pastGuesses={pastGuesses}
-        input={input}
-      />
-      <KeyBoard hints={wordle.alphabet} handler={handleInput} />
+      <Container
+        style={{
+          overflow: "hidden",
+          minHeight: `${window.innerHeight - 5}px`,
+        }}
+      >
+        <NavBar seed={wordle.seed} />
+        <TileBoard
+          pastHints={pastHints}
+          pastGuesses={pastGuesses}
+          input={input}
+        />
+        <KeyBoard hints={wordle.alphabet} handler={handleInput} />
+      </Container>
     </>
   );
 };

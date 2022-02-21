@@ -3,7 +3,6 @@ body {
   font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
   background-color: black;
   color: white;
-  /* min-height: 100vh; */
 }
 
 body {
@@ -17,9 +16,12 @@ code {
     monospace;
 }
 
-/* .App {
-  text-align: center;
-  background-color: black;
-  min-height: 100vh;
-  color: white;
-} */
+.striped {
+  background: repeating-linear-gradient(
+    0deg,
+    #606dbc,
+    #606dbc 50px,
+    #465298 50px,
+    #465298 100px
+  );
+}
