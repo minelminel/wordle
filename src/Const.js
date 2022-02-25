@@ -7,7 +7,7 @@ export const Colors = {
   WHITE: "#FFFFFF",
 };
 export const Flags = {
-  ANIMATION: true,
+  ANIMATION: false,
 };
 export const Hints = {
   BLACK: -1,

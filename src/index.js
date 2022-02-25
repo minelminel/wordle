@@ -102,8 +102,8 @@ const Layout = (props) => {
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <Layout />
+    <App />
+    {/* <Layout /> */}
   </React.StrictMode>,
   document.getElementById("root")
 );
