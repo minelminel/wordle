@@ -5,6 +5,7 @@ export const Colors = {
   YELLOW: "#B59F3B",
   GREEN: "#538D4E",
   WHITE: "#FFFFFF",
+  PURPLE: "#5B5AD6",
 };
 export const Flags = {
   ANIMATION: false,

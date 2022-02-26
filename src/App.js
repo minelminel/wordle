@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import NavBar from "./components/NavBar";
 import KeyBoard from "./components/KeyBoard";
 import TileBoard from "./components/TileBoard";
+import { Visualizer } from "./components/Visualizer";
 import { Wordle } from "./Wordle";
 import { Keys } from "./Const";
 
@@ -14,9 +15,12 @@ window.wordle = wordle;
 // DEV: enter initial state here
 const initialInput = "".split("");
 const initialGuesses = [].map((e) => e.split(""));
-const initialHints = initialGuesses.map((e) => wordle.evaluateGuess(e)[0]);
+const initialHints = initialGuesses.map((e) =>
+  wordle.getHint(wordle.getAnswer(), e)
+);
 
 export const App = (props) => {
+  const [showVisualizer, setShowVisualizer] = React.useState(true);
   const [pastGuesses, setPastGuesses] = React.useState(initialGuesses);
   const [pastHints, setPastHints] = React.useState(initialHints);
   const [input, setInput] = React.useState(initialInput);
@@ -28,6 +32,11 @@ export const App = (props) => {
     setPastHints(initialHints);
     setInput(initialInput);
     setGameEnded(false);
+    initialGuesses.forEach((e) => wordle.playTurn(e));
+  };
+
+  const handleToggle = (value) => {
+    setShowVisualizer(!value);
   };
 
   const handleInput = (e) => {
@@ -86,13 +95,28 @@ export const App = (props) => {
           minHeight: `${window.innerHeight - 5}px`,
         }}
       >
-        <NavBar seed={wordle.seed} />
-        <TileBoard
-          pastHints={pastHints}
-          pastGuesses={pastGuesses}
-          input={input}
+        <NavBar
+          seed={wordle.seed}
+          value={showVisualizer}
+          onToggle={handleToggle}
         />
-        <KeyBoard hints={wordle.alphabet} handler={handleInput} />
+        {showVisualizer && (
+          <Visualizer
+            alphabet={wordle.alphabet}
+            hints={pastHints}
+            guesses={pastGuesses}
+          />
+        )}
+        {!showVisualizer && (
+          <TileBoard
+            pastHints={pastHints}
+            pastGuesses={pastGuesses}
+            input={input}
+          />
+        )}
+        {!showVisualizer && (
+          <KeyBoard hints={wordle.alphabet} handler={handleInput} />
+        )}
       </Container>
     </>
   );

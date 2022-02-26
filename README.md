@@ -1,5 +1,9 @@
 # Wordle
 
+Test Cases:
+
+- visualizer: seed=1123, guesses=earth,solid,belly : currently all first column letters are "eliminated"
+
 `game-keyboard`
 
 - WxH = 500x200px
