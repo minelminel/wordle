@@ -20,7 +20,7 @@ const initialHints = initialGuesses.map((e) =>
 );
 
 export const App = (props) => {
-  const [showVisualizer, setShowVisualizer] = React.useState(true);
+  const [showVisualizer, setShowVisualizer] = React.useState(false);
   const [pastGuesses, setPastGuesses] = React.useState(initialGuesses);
   const [pastHints, setPastHints] = React.useState(initialHints);
   const [input, setInput] = React.useState(initialInput);
