@@ -1,17 +1,17 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
 
 import NavBar from "./components/NavBar";
 import KeyBoard from "./components/KeyBoard";
 import TileBoard from "./components/TileBoard";
-import { Wordle } from "./Game";
+import { Wordle } from "./Wordle";
 import { Keys } from "./Const";
 
 // TODO: do this in a useEffect with finish state dependency array
 const wordle = new Wordle();
 window.wordle = wordle;
 
+// DEV: enter initial state here
 const initialInput = "".split("");
 const initialGuesses = [].map((e) => e.split(""));
 const initialHints = initialGuesses.map((e) => wordle.evaluateGuess(e)[0]);
@@ -40,7 +40,7 @@ export const App = (props) => {
       if (gameEnded) {
         reset();
         return;
-      } else if (!wordle.isValid(input)) {
+      } else if (!wordle.isValidGuess(input)) {
         alert(`Invalid Word: ${input.join("")}`);
         return;
       }
@@ -48,18 +48,30 @@ export const App = (props) => {
         setInput([...input, e]);
         return;
       }
-      const [hint, ended] = wordle.evaluateGuess(input);
+      const [hints, ended] = wordle.playTurn(input);
       setGameEnded(ended);
       if (ended) {
         // TODO: do alert on timeout so we can render the answer first
         if (wordle.isAnswer(input)) {
-          alert(`You Win! 🥳 The word was ${wordle.getAnswer().toUpperCase()}`);
+          setTimeout(
+            () =>
+              alert(
+                `You Win! 🥳 The word was ${wordle.getAnswer().toUpperCase()}`
+              ),
+            250
+          );
         } else {
-          alert(`Uh oh! 😓 The word was ${wordle.getAnswer().toUpperCase()}`);
+          setTimeout(
+            () =>
+              alert(
+                `Uh oh! 😓 The word was ${wordle.getAnswer().toUpperCase()}`
+              ),
+            250
+          );
         }
       }
       setPastGuesses([...pastGuesses, input]);
-      setPastHints([...pastHints, hint]);
+      setPastHints([...pastHints, hints]);
       setInput([]);
     } else {
       setInput([...input, e]);

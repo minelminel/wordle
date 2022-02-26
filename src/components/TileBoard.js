@@ -82,7 +82,12 @@ const StyledTile = styled.div`
 
 const Tile = (props) => {
   return (
-    <StyledTile {...{ className: props.animate ? `animate` : ``, ...props }}>
+    <StyledTile
+      {...{
+        className: Flags.ANIMATION && props.animate ? `animate` : ``,
+        ...props,
+      }}
+    >
       {props.letter}
     </StyledTile>
   );
